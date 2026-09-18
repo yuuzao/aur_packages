@@ -1,8 +1,15 @@
-# Dagu environment configuration
-# See: dagu start-all --help
-# Uncomment and modify as needed
+# Dagu 运行时环境。此文件会安装到 /etc/dagu/environment，并由 dagu.service 的 EnvironmentFile 加载。
+# pacman 将其标为 backup，本机改过的内容升级时不会被覆盖。
 
+# DAGU_HOME：数据目录。未设置时服务用 ExecStart 的 --dagu-home /var/lib/dagu。
 # DAGU_HOME=/var/lib/dagu
-# DAGU_HOST=127.0.0.1
-# DAGU_PORT=8080
+
+# DAGU_HOST：Web UI 监听地址。必填（本包装提供默认值）。只绑本机，避免 0.0.0.0。
+DAGU_HOST=127.0.0.1
+
+# DAGU_PORT：Web UI 端口。必填（本包装提供默认值）。
+# 不用 8080，避免和常见本机/容器服务抢端口。首次安装即可直接监听此端口。
+DAGU_PORT=18525
+
+# DAGU_COORDINATOR_ENABLED：是否启用 coordinator。未设置时使用上游默认。
 # DAGU_COORDINATOR_ENABLED=true
