@@ -3,21 +3,17 @@ Description=Dagu Workflow Engine
 Documentation=https://docs.dagu.sh
 After=network-online.target
 Wants=network-online.target
+# User/Group 由安装脚本写入 /etc/systemd/system/dagu.service.d/owner.conf（安装者登录用户）。
+# 没有这份 drop-in 时拒绝启动，避免默默用 root。
+AssertPathExists=/etc/systemd/system/dagu.service.d/owner.conf
 
 [Service]
 Type=simple
-User=dagu
-Group=dagu
 # DAGU_HOME 必须进进程环境：start-all 的 --dagu-home 不会传给再 fork 出的 `dagu start`。
 Environment=DAGU_HOME=/var/lib/dagu
 EnvironmentFile=-/etc/dagu/environment
 ExecStart=/usr/bin/dagu start-all --dagu-home /var/lib/dagu
 WorkingDirectory=/var/lib/dagu
-
-# Hardening
-ProtectSystem=strict
-ProtectHome=yes
-ReadWritePaths=/var/lib/dagu
 PrivateTmp=yes
 NoNewPrivileges=yes
 

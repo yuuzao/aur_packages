@@ -3,7 +3,7 @@
 
 # DAGU_HOME：数据目录。必填。UI/MCP 会再 fork `dagu start`，子进程只看环境变量，
 # 不能只靠 ExecStart 上的 --dagu-home。unit 里也写了同值，避免旧 backup 文件缺这一项。
-# 若要换数据目录，这里和 WorkingDirectory / ReadWritePaths 必须一起改。
+# 若要换数据目录，这里和 unit 的 WorkingDirectory 必须一起改。
 DAGU_HOME=/var/lib/dagu
 
 # DAGU_HOST：Web UI 监听地址。必填（本包装提供默认值）。只绑本机，避免 0.0.0.0。

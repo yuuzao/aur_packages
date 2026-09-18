@@ -1,8 +1,67 @@
+_dagu_owner_conf=/etc/systemd/system/dagu.service.d/owner.conf
+
+_dagu_resolve_owner() {
+  if [ -n "${SUDO_USER:-}" ] && [ "$SUDO_USER" != root ]; then
+    printf '%s\n' "$SUDO_USER"
+    return 0
+  fi
+  echo "error: dagu.service must run as the installing login user; SUDO_USER is unset or root" >&2
+  return 1
+}
+
+_dagu_owner_from_conf() {
+  if [ ! -f "$_dagu_owner_conf" ]; then
+    echo "error: missing $_dagu_owner_conf" >&2
+    return 1
+  fi
+  owner=$(awk -F= '/^User=/{print $2; exit}' "$_dagu_owner_conf")
+  if [ -z "$owner" ]; then
+    echo "error: $_dagu_owner_conf has no User=" >&2
+    return 1
+  fi
+  printf '%s\n' "$owner"
+}
+
+_dagu_write_owner_conf() {
+  owner=$1
+  if ! group=$(id -gn "$owner"); then
+    echo "error: cannot resolve group for user $owner" >&2
+    return 1
+  fi
+  mkdir -p /etc/systemd/system/dagu.service.d
+  cat > "$_dagu_owner_conf" <<EOF
+[Service]
+User=$owner
+Group=$group
+EOF
+}
+
+_dagu_chown_home() {
+  owner=$1
+  if ! group=$(id -gn "$owner"); then
+    echo "error: cannot resolve group for user $owner" >&2
+    return 1
+  fi
+  chown -R "$owner:$group" /var/lib/dagu
+}
+
+_dagu_ensure_owner() {
+  if [ -f "$_dagu_owner_conf" ]; then
+    owner=$(_dagu_owner_from_conf) || return 1
+  else
+    owner=$(_dagu_resolve_owner) || return 1
+    _dagu_write_owner_conf "$owner" || return 1
+    echo ":: dagu.service User=$owner (from SUDO_USER)"
+  fi
+  _dagu_chown_home "$owner" || return 1
+}
+
 post_install() {
   echo ":: Dagu workflow engine installed"
   echo ":: Web UI: http://127.0.0.1:18525"
   echo ":: Configuration: /etc/dagu/environment"
   echo ":: DAG definitions: /var/lib/dagu/dags/"
+  _dagu_ensure_owner || return 1
   if [ ! -d /run/systemd/system ]; then
     echo ":: systemd is not running; skip enabling dagu.service"
     return 0
@@ -13,6 +72,7 @@ post_install() {
 
 post_upgrade() {
   echo ":: Dagu upgraded — check release notes for breaking changes"
+  _dagu_ensure_owner || return 1
   if [ ! -d /run/systemd/system ]; then
     echo ":: systemd is not running; skip restarting dagu.service"
     return 0
