@@ -8,8 +8,10 @@ Wants=network-online.target
 Type=simple
 User=dagu
 Group=dagu
-ExecStart=/usr/bin/dagu start-all --dagu-home /var/lib/dagu
+# DAGU_HOME 必须进进程环境：start-all 的 --dagu-home 不会传给再 fork 出的 `dagu start`。
+Environment=DAGU_HOME=/var/lib/dagu
 EnvironmentFile=-/etc/dagu/environment
+ExecStart=/usr/bin/dagu start-all --dagu-home /var/lib/dagu
 WorkingDirectory=/var/lib/dagu
 
 # Hardening

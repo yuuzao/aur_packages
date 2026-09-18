@@ -9,3 +9,6 @@ src/
 
 # nvchecker 运行时文件
 .nvchecker/
+
+# 含 Dagu MCP token，不入库
+.cursor/mcp.json

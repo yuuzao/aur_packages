@@ -2,7 +2,7 @@
 
 pkgname=dagu-bin
 pkgver=2.16.6
-pkgrel=3
+pkgrel=4
 pkgdesc="Lightweight workflow orchestration engine with web UI"
 arch=('x86_64' 'aarch64' 'armv7h' 'armv6h')
 url="https://github.com/dagucloud/dagu"
@@ -32,10 +32,10 @@ source_aarch64=("${pkgname}-${pkgver}-aarch64.tar.gz::${_base_url}/dagu_${pkgver
 source_armv7h=("${pkgname}-${pkgver}-armv7h.tar.gz::${_base_url}/dagu_${pkgver}_linux_armv7.tar.gz")
 source_armv6h=("${pkgname}-${pkgver}-armv6h.tar.gz::${_base_url}/dagu_${pkgver}_linux_armv6.tar.gz")
 
-sha256sums=('f5069a8dd8026e7d248ac0c6fc13251b29381d9bb76fe50cf1bed15434f5ddfa'
+sha256sums=('68eb3772071ec8919dfb7a222d14b5f76bd8818cf46e40b2b52f4b9704b0595a'
             '71faf0a14465a71adaa0fc63b3f99b2b940e7d774609986791c3647fccddc2bf'
             'd478707f5152360f83d77ae4b9be90a5b08534bec9f4da8f0bf9e4e203a77902'
-            '40d69078dee2f915d6c858b27a90d52f857413978d8a458a5c367bd35251c8e5')
+            '6f328e0df767b75de0f6ebd2e3013aa5d9399eda9c3c0f84e49b73bb9f023f47')
 sha256sums_x86_64=('06c3ed951fb58408313b1db25bc9f90ff2f427cbdbe68aaff55cd5465c167717')
 sha256sums_aarch64=('7e6cf244147379d1ca53bc977e4157197015d86e8d1d33031c07ddfb5129ec38')
 sha256sums_armv7h=('9188c2d4dc7d6795ed6f57bb736e59ca505d23201a021d596494b5968c3366d2')

@@ -1,8 +1,10 @@
 # Dagu 运行时环境。此文件会安装到 /etc/dagu/environment，并由 dagu.service 的 EnvironmentFile 加载。
 # pacman 将其标为 backup，本机改过的内容升级时不会被覆盖。
 
-# DAGU_HOME：数据目录。未设置时服务用 ExecStart 的 --dagu-home /var/lib/dagu。
-# DAGU_HOME=/var/lib/dagu
+# DAGU_HOME：数据目录。必填。UI/MCP 会再 fork `dagu start`，子进程只看环境变量，
+# 不能只靠 ExecStart 上的 --dagu-home。unit 里也写了同值，避免旧 backup 文件缺这一项。
+# 若要换数据目录，这里和 WorkingDirectory / ReadWritePaths 必须一起改。
+DAGU_HOME=/var/lib/dagu
 
 # DAGU_HOST：Web UI 监听地址。必填（本包装提供默认值）。只绑本机，避免 0.0.0.0。
 DAGU_HOST=127.0.0.1
