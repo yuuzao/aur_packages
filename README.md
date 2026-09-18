@@ -1,6 +1,6 @@
 # aur_packages
 
-严谨程度：项目说明。当前仓库尚未包含具体 PKGBUILD，下文描述的是本仓库的用途与约定目录结构，不表示已有可构建的软件包。
+严谨程度：项目说明。下文描述本仓库的用途、目录约定，以及当前已收录软件包。
 
 本仓库用于集中管理 Arch Linux 的 PKGBUILD 软件包定义，覆盖自维护包以及需要本地跟踪的 AUR 包。每个软件包占用一个独立目录，目录内保存构建所需的 `PKGBUILD`、`.SRCINFO` 以及补丁、安装脚本等附属文件。
 
@@ -17,10 +17,15 @@
 ```text
 aur_packages/
 ├── README.md
-└── <pkgname>/
+├── .gitignore
+└── dagu-bin/
     ├── PKGBUILD
     ├── .SRCINFO
-    └── （可选）补丁、.install、桌面文件等
+    ├── dagu-bin.install
+    ├── dagu.service
+    ├── dagu.sysusers
+    ├── dagu.tmpfiles
+    └── dagu.environment
 ```
 
 ```mermaid
@@ -35,12 +40,20 @@ flowchart TD
   build --> artifact
 ```
 
+## 已收录软件包
+
+| 目录 | 版本 | 说明 |
+| --- | --- | --- |
+| `dagu-bin` | 2.7.4-1 | Dagu 工作流引擎的上游预编译二进制包，提供 `dagu`，与源码包 `dagu` 冲突 |
+
+`dagu-bin` 从 [GitHub Releases](https://github.com/dagucloud/dagu/releases) 下载对应架构的 `tar.gz`，安装 `/usr/bin/dagu`、systemd 系统服务、sysusers/tmpfiles，以及 bash/zsh/fish 补全。默认 Web UI 地址见安装脚本提示：`http://127.0.0.1:8080`。配置文件为 `/etc/dagu/environment`（pacman backup），DAG 定义目录为 `/var/lib/dagu/dags/`。
+
 ## 构建单个软件包
 
 进入对应目录后构建。需要安装 `base-devel`，并确认 `PKGBUILD` 中的源码地址可访问：
 
 ```bash
-cd <pkgname>
+cd dagu-bin
 makepkg -si
 ```
 
@@ -57,6 +70,12 @@ makepkg -si
 
 ```bash
 makepkg --printsrcinfo > .SRCINFO
+```
+
+启用系统服务：
+
+```bash
+sudo systemctl enable --now dagu.service
 ```
 
 ## 约定

@@ -1,0 +1,23 @@
+[Unit]
+Description=Dagu Workflow Engine
+Documentation=https://docs.dagu.sh
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=dagu
+Group=dagu
+ExecStart=/usr/bin/dagu start-all --dagu-home /var/lib/dagu
+EnvironmentFile=-/etc/dagu/environment
+WorkingDirectory=/var/lib/dagu
+
+# Hardening
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/dagu
+PrivateTmp=yes
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target
