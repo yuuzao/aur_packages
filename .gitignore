@@ -6,3 +6,6 @@ src/
 *.tar.gz
 *.tar.xz
 *.tar.zst
+
+# nvchecker 运行时文件
+.nvchecker/

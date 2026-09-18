@@ -25,3 +25,11 @@ makepkg --printsrcinfo > .SRCINFO
 - 不提交 `pkg/`、`src/` 以及 `*.pkg.tar.*` 等构建产物。
 - 上游源码在构建时按 `PKGBUILD` 的 `source` 下载，不在本仓库镜像完整上游树。
 - 向 AUR 发布时，使用该软件包自己的 AUR Git 远程，不要把本仓库根目录当作单个 AUR 包推送。
+
+## 自动更新版本
+
+GitHub Actions 读取根目录 `nvchecker.toml`，用各软件包目录里 `PKGBUILD` 的 `pkgver` 作为当前版本，向对应上游探测是否有更新。有更新时直接在默认分支写入 `pkgver`、`pkgrel=1`、各架构校验和以及 `.SRCINFO`，不开 PR，也不向 AUR 推送。
+
+`nvchecker.toml` 里每个表的名字必须等于软件包目录名。探测规则写在该文件的注释中。
+
+工作流每天 UTC 06:17 运行，也可在仓库 Actions 里手动 `Run workflow`。日志级别由环境变量 `LOG_LEVEL` 控制，取值：`debug`、`info`、`warning`、`error`。

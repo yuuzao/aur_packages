@@ -1,0 +1,21 @@
+# nvchecker 配置。表名必须与软件包目录名一致。
+# GitHub Actions 根据各目录 PKGBUILD 的 pkgver 生成 oldver，再与上游比较。
+
+[__config__]
+# 必填。运行时写入，不入库。路径相对本文件。
+oldver = ".nvchecker/oldver.json"
+# 必填。nvchecker 写入探测结果，不入库。
+newver = ".nvchecker/newver.json"
+# 必填。运行时由 GITHUB_TOKEN 写入，不入库。
+keyfile = ".nvchecker/keyfile.toml"
+# 可选。HTTP 超时秒数。未写此项时 nvchecker 默认 20。
+http_timeout = 30
+
+# 必填 source。github 为 owner/repo。
+# use_latest_release：使用 GitHub 的 latest release tag，不含 pre-release。
+# prefix：tag 以 v 开头时去掉，以便与 pkgver 比较；不以 v 开头则原样保留。
+[dagu-bin]
+source = "github"
+github = "dagucloud/dagu"
+use_latest_release = true
+prefix = "v"
