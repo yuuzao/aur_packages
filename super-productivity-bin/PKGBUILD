@@ -1,0 +1,36 @@
+# Maintainer: yuuzao
+# Stable upstream binary distribution; maintained independently of AUR.
+pkgname=super-productivity-bin
+pkgver=19.2.0
+pkgrel=1
+pkgdesc='Task management with timeboxing and time tracking (official binaries)'
+arch=('x86_64')
+url='https://super-productivity.com'
+license=('MIT')
+depends=(
+  'alsa-lib' 'at-spi2-core' 'cairo' 'dbus' 'expat' 'gcc-libs' 'glib2' 'glibc'
+  'gtk3' 'hicolor-icon-theme' 'libcups' 'libdrm' 'libnotify' 'libsecret'
+  'libx11' 'libxcb' 'libxcomposite' 'libxdamage' 'libxext' 'libxfixes'
+  'libxkbcommon' 'libxrandr' 'libxss' 'libxtst' 'mesa' 'nspr' 'nss' 'pango'
+  'systemd-libs' 'xdg-utils'
+)
+optdepends=('libappindicator-gtk3: tray icon integration')
+provides=("super-productivity=$pkgver" "superproductivity=$pkgver")
+conflicts=('super-productivity' 'super-productivity-git' 'superproductivity' 'superproductivity-bin')
+options=('!strip' '!debug')
+source=("LICENSE-$pkgver::https://raw.githubusercontent.com/super-productivity/super-productivity/v$pkgver/LICENSE")
+source_x86_64=("$pkgname-$pkgver-amd64.deb::https://github.com/super-productivity/super-productivity/releases/download/v$pkgver/superProductivity-amd64.deb")
+sha256sums=('2e279de19632b5694d24b0ac06fd5b837ec487bf821302d9ce195379850a5fcb')
+sha256sums_x86_64=('aa48aa092d3ac456460277b04b8a93fb0fed009385729bf2898f56d893dd2443')
+
+package() {
+  # makepkg extracts the deb's ar container; unpack only its data payload.
+  bsdtar -xf data.tar.xz -C "$pkgdir"
+  # Debian maintainer scripts are not run; pacman hooks update desktop caches.
+  install -dm755 "$pkgdir/usr/bin"
+  ln -s '/opt/Super Productivity/superproductivity' "$pkgdir/usr/bin/super-productivity"
+  ln -s super-productivity "$pkgdir/usr/bin/superproductivity"
+  sed -i 's|^Exec=.*|Exec=super-productivity %U|' \
+    "$pkgdir/usr/share/applications/superproductivity.desktop"
+  install -Dm644 "LICENSE-$pkgver" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

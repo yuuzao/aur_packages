@@ -12,3 +12,7 @@ src/
 
 # 含 Dagu MCP token，不入库
 .cursor/mcp.json
+
+# Downloaded Super Productivity release inputs
+/super-productivity-bin/*.deb
+/super-productivity-bin/LICENSE-*

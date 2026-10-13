@@ -19,3 +19,9 @@ source = "github"
 github = "dagucloud/dagu"
 use_latest_release = true
 prefix = "v"
+
+[super-productivity-bin]
+source = "github"
+github = "super-productivity/super-productivity"
+use_latest_release = true
+prefix = "v"
