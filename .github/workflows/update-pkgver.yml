@@ -38,10 +38,22 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Check publishing token
+      - name: Validate publishing credentials
         env:
-          PUBLISH_TOKEN: ${{ secrets.REPO_PUBLISH_TOKEN }}
-        run: test -n "$PUBLISH_TOKEN" || { echo 'Missing REPO_PUBLISH_TOKEN' >&2; exit 1; }
+          GH_TOKEN: ${{ secrets.REPO_PUBLISH_TOKEN }}
+        run: |
+          test -n "$GH_TOKEN" || { echo 'Missing REPO_PUBLISH_TOKEN' >&2; exit 1; }
+          python3 - <<'PYTHON'
+          import subprocess
+          import tomllib
+          with open("repository.toml", "rb") as stream:
+              config = tomllib.load(stream)
+          subprocess.run([
+              "gh", "api",
+              f"repos/{config['repository']}/releases/tags/{config['release']}",
+              "--silent",
+          ], check=True)
+          PYTHON
       - name: Bump PKGBUILD versions
         if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.check_updates)
         env:
