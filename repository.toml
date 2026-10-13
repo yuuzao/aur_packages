@@ -1,0 +1,6 @@
+# Public distribution target; only x86_64 packages are currently built.
+repository = "yuuzao/aur_packages-repo"
+release = "repo-x86_64"
+database = "personal"
+architecture = "x86_64"
+signing_fingerprint = "5502F1B80D58187904CD60711D0FB4152310B9B1"
