@@ -33,6 +33,8 @@ makepkg --printsrcinfo > .SRCINFO
 - 一个目录只对应一个 `pkgname`（split package 仍放在同一目录，由 `PKGBUILD` 内的 `pkgname` 数组声明）。
 - 不提交 `pkg/`、`src/` 以及 `*.pkg.tar.*` 等构建产物。
 - 上游源码在构建时按 `PKGBUILD` 的 `source` 下载，不在本仓库镜像完整上游树。
+- 已在 `nvchecker.toml` 中跟踪的软件包，其 `pkgver`、`pkgrel=1`、校验和与 `.SRCINFO` 中对应字段由 CI 写入默认分支，本地不手工修改；本地只改打包内容，并同时增加 `pkgrel`。修改前先 `git pull --rebase`，避免在过期基线上提交。
+- 二进制包只由 CI 构建和发布，不从本地上传到公开 Release。
 - 向 AUR 发布时，使用该软件包自己的 AUR Git 远程，不要把本仓库根目录当作单个 AUR 包推送。
 
 ## 自动更新版本
