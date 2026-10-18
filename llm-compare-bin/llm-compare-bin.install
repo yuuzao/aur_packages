@@ -1,0 +1,14 @@
+# Runs as the login user's systemd user service; pacman (root) never starts or restarts it,
+# because a restart cancels comparisons that are still running.
+post_install() {
+  echo ':: llm-compare runs as a systemd user service for the user who owns the agents.'
+  echo ':: First setup (as that user):'
+  echo '::   llm-compare init --config ~/.config/llm-compare/config.yaml   # or copy an existing config, web_dist_dir: embedded'
+  echo '::   llm-compare doctor --config ~/.config/llm-compare/config.yaml'
+  echo '::   systemctl --user enable --now llm-compare'
+}
+
+post_upgrade() {
+  echo ':: llm-compare upgraded. Restart it after running tasks finish:'
+  echo '::   systemctl --user restart llm-compare'
+}

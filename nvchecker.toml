@@ -25,3 +25,9 @@ source = "github"
 github = "super-productivity/super-productivity"
 use_latest_release = true
 prefix = "v"
+
+[llm-compare-bin]
+source = "github"
+github = "yuuzao/llm-compare"
+use_latest_release = true
+prefix = "v"

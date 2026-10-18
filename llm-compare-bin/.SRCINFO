@@ -1,0 +1,19 @@
+pkgbase = llm-compare-bin
+	pkgdesc = Local workbench comparing models and ACP agents side by side (official binary)
+	pkgver = 0.1.1
+	pkgrel = 1
+	url = https://github.com/yuuzao/llm-compare
+	install = llm-compare-bin.install
+	arch = x86_64
+	license = MIT
+	depends = glibc
+	depends = gcc-libs
+	depends = bubblewrap
+	provides = llm-compare=0.1.1
+	conflicts = llm-compare
+	options = !strip
+	options = !debug
+	source_x86_64 = llm-compare-bin-0.1.1-x86_64.tar.gz::https://github.com/yuuzao/llm-compare/releases/download/v0.1.1/llm-compare-v0.1.1-linux-x64.tar.gz
+	sha256sums_x86_64 = d819d8a6c3312e2736589085bbc574d7aa014abb33866e6ab17eed3c0399a8a1
+
+pkgname = llm-compare-bin

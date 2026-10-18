@@ -1,0 +1,28 @@
+# Maintainer: yuuzao
+# Single-file Node SEA release; the app is embedded in the executable.
+pkgname=llm-compare-bin
+pkgver=0.1.1
+pkgrel=1
+pkgdesc='Local workbench comparing models and ACP agents side by side (official binary)'
+arch=('x86_64')
+url='https://github.com/yuuzao/llm-compare'
+license=('MIT')
+depends=('glibc' 'gcc-libs' 'bubblewrap')
+provides=("llm-compare=$pkgver")
+conflicts=('llm-compare')
+# Stripping would drop the injected SEA blob and break the executable.
+options=('!strip' '!debug')
+install=llm-compare-bin.install
+source_x86_64=("$pkgname-$pkgver-x86_64.tar.gz::$url/releases/download/v$pkgver/llm-compare-v$pkgver-linux-x64.tar.gz")
+sha256sums_x86_64=('d819d8a6c3312e2736589085bbc574d7aa014abb33866e6ab17eed3c0399a8a1')
+
+package() {
+  install -Dm755 llm-compare "$pkgdir/usr/bin/llm-compare"
+  install -Dm644 llm-compare.service "$pkgdir/usr/lib/systemd/user/llm-compare.service"
+  install -Dm644 config.example.yaml "$pkgdir/usr/share/doc/llm-compare/config.example.yaml"
+  install -Dm644 安装与发布.md "$pkgdir/usr/share/doc/llm-compare/install.zh_CN.md"
+  install -Dm644 build-info.json "$pkgdir/usr/share/doc/llm-compare/build-info.json"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -dm755 "$pkgdir/usr/share/licenses/$pkgname/third-party"
+  install -m644 licenses/* "$pkgdir/usr/share/licenses/$pkgname/third-party/"
+}
