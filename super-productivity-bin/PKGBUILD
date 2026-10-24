@@ -1,7 +1,7 @@
 # Maintainer: yuuzao
 # Stable upstream binary distribution; maintained independently of AUR.
 pkgname=super-productivity-bin
-pkgver=19.2.0
+pkgver=19.3.0
 pkgrel=1
 pkgdesc='Task management with timeboxing and time tracking (official binaries)'
 arch=('x86_64')
@@ -21,7 +21,7 @@ options=('!strip' '!debug')
 source=("LICENSE-$pkgver::https://raw.githubusercontent.com/super-productivity/super-productivity/v$pkgver/LICENSE")
 source_x86_64=("$pkgname-$pkgver-amd64.deb::https://github.com/super-productivity/super-productivity/releases/download/v$pkgver/superProductivity-amd64.deb")
 sha256sums=('2e279de19632b5694d24b0ac06fd5b837ec487bf821302d9ce195379850a5fcb')
-sha256sums_x86_64=('aa48aa092d3ac456460277b04b8a93fb0fed009385729bf2898f56d893dd2443')
+sha256sums_x86_64=('9f6d738e0c00f662dccb13908485dcb4d4695c40862a54fe74dc78811d270435')
 
 package() {
   # makepkg extracts the deb's ar container; unpack only its data payload.
