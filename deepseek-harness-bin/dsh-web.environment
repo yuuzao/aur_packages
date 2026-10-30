@@ -1,0 +1,6 @@
+# DeepSeek Harness Web UI 运行时环境。
+# 此文件会安装到 /etc/deepseek-harness/environment，并由 dsh-web.service 的 EnvironmentFile 加载。
+# pacman 将其标为 backup，本机改过的内容升级时不会被覆盖。
+
+# DSH_WEB_PORT：Web UI 监听端口。必填（本包装提供默认值 3080）。合法取值范围：1-65535。
+DSH_WEB_PORT=3080

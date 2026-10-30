@@ -1,0 +1,94 @@
+_dsh_owner_conf=/etc/systemd/system/dsh-web.service.d/owner.conf
+
+_dsh_resolve_owner() {
+  if [ -n "${SUDO_USER:-}" ] && [ "$SUDO_USER" != root ]; then
+    printf '%s\n' "$SUDO_USER"
+    return 0
+  fi
+  echo "error: dsh-web.service must run as the installing login user; SUDO_USER is unset or root" >&2
+  return 1
+}
+
+_dsh_owner_from_conf() {
+  if [ ! -f "$_dsh_owner_conf" ]; then
+    echo "error: missing $_dsh_owner_conf" >&2
+    return 1
+  fi
+  owner=$(awk -F= '/^User=/{print $2; exit}' "$_dsh_owner_conf")
+  if [ -z "$owner" ]; then
+    echo "error: $_dsh_owner_conf has no User=" >&2
+    return 1
+  fi
+  printf '%s\n' "$owner"
+}
+
+_dsh_write_owner_conf() {
+  owner=$1
+  if ! group=$(id -gn "$owner"); then
+    echo "error: cannot resolve group for user $owner" >&2
+    return 1
+  fi
+  if ! passwd_entry=$(getent passwd "$owner") || [ -z "$passwd_entry" ]; then
+    echo "error: cannot resolve passwd entry for user $owner" >&2
+    return 1
+  fi
+  home=$(printf '%s\n' "$passwd_entry" | awk -F: '{print $6}')
+  shell=$(printf '%s\n' "$passwd_entry" | awk -F: '{print $7}')
+  if [ -z "$home" ] || [ -z "$shell" ]; then
+    echo "error: missing home or shell for user $owner" >&2
+    return 1
+  fi
+  mkdir -p /etc/systemd/system/dsh-web.service.d
+  cat > "$_dsh_owner_conf" <<EOF
+[Service]
+User=$owner
+Group=$group
+WorkingDirectory=$home
+Environment=HOME=$home
+Environment=USER=$owner
+Environment=SHELL=$shell
+Environment=PATH=$home/.local/bin:$home/.grok/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/usr/lib/rustup/bin:/opt/postgresql18/bin
+EOF
+}
+
+_dsh_ensure_owner() {
+  if [ -f /etc/systemd/system/dsh-web.service ] && [ ! -L /etc/systemd/system/dsh-web.service ]; then
+    rm -f /etc/systemd/system/dsh-web.service
+    echo ":: removed legacy /etc/systemd/system/dsh-web.service in favor of packaged unit"
+  fi
+  if [ -f "$_dsh_owner_conf" ]; then
+    owner=$(_dsh_owner_from_conf) || return 1
+  else
+    owner=$(_dsh_resolve_owner) || return 1
+    _dsh_write_owner_conf "$owner" || return 1
+    echo ":: dsh-web.service User=$owner (from SUDO_USER)"
+  fi
+}
+
+post_install() {
+  echo ":: DeepSeek Harness installed"
+  echo ":: Web UI port configuration: /etc/deepseek-harness/environment"
+  _dsh_ensure_owner || return 1
+  if [ ! -d /run/systemd/system ]; then
+    echo ":: systemd is not running; skip enabling dsh-web.service"
+    return 0
+  fi
+  systemctl daemon-reload
+  if systemctl is-active --quiet dsh-web.service; then
+    systemctl enable dsh-web.service
+    systemctl try-restart dsh-web.service
+  else
+    systemctl enable --now dsh-web.service
+  fi
+}
+
+post_upgrade() {
+  echo ":: DeepSeek Harness upgraded"
+  _dsh_ensure_owner || return 1
+  if [ ! -d /run/systemd/system ]; then
+    echo ":: systemd is not running; skip restarting dsh-web.service"
+    return 0
+  fi
+  systemctl daemon-reload
+  systemctl try-restart dsh-web.service
+}

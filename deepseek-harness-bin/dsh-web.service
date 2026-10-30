@@ -1,0 +1,21 @@
+[Unit]
+Description=DeepSeek Harness web UI
+Documentation=https://github.com/deepseek-ai/deepseek-harness
+After=network-online.target
+Wants=network-online.target
+# User/Group/WorkingDirectory/HOME/SHELL/PATH 由安装脚本写入 /etc/systemd/system/dsh-web.service.d/owner.conf（安装者登录用户）。
+# 没有这份 drop-in 时拒绝启动，避免默默用 root。
+AssertPathExists=/etc/systemd/system/dsh-web.service.d/owner.conf
+
+[Service]
+Type=simple
+Environment=DSH_WEB_PORT=3080
+EnvironmentFile=-/etc/deepseek-harness/environment
+ExecStart=/usr/bin/node /usr/lib/deepseek-harness/dsh-web.mjs
+Restart=on-failure
+RestartSec=3
+KillSignal=SIGTERM
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target

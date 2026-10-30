@@ -31,3 +31,10 @@ source = "github"
 github = "yuuzao/llm-compare"
 use_latest_release = true
 prefix = "v"
+
+[deepseek-harness-bin]
+source = "github"
+github = "yuuzao/aur_packages-repo"
+use_latest_release = true
+prefix = "v"
+

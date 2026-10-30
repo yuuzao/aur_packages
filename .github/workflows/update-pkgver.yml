@@ -54,6 +54,12 @@ jobs:
               "--silent",
           ], check=True)
           PYTHON
+      - name: Prebuild deepseek-harness Linux x86_64 release if upstream tag updated
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.check_updates)
+        env:
+          LOG_LEVEL: info
+          GH_TOKEN: ${{ secrets.REPO_PUBLISH_TOKEN }}
+        run: python3 .github/scripts/prebuild-deepseek-harness.py
       - name: Bump PKGBUILD versions
         if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.check_updates)
         env:

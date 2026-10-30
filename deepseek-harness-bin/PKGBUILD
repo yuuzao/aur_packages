@@ -1,0 +1,47 @@
+# Maintainer: yuuzao
+# 预编译的 DeepSeek Harness Linux x86_64 运行时，附带 dsh-web.service 系统服务管理。
+
+pkgname=deepseek-harness-bin
+pkgver=0.2.1rc.5
+pkgrel=1
+pkgdesc='DeepSeek Harness CLI and agent harness (prebuilt binary)'
+arch=('x86_64')
+url='https://github.com/deepseek-ai/deepseek-harness'
+license=('MIT')
+depends=('nodejs' 'pnpm')
+provides=('deepseek-harness')
+conflicts=('deepseek-harness' 'deepseek-harness-git')
+options=('!strip' '!debug')
+backup=('etc/deepseek-harness/environment')
+install=deepseek-harness-bin.install
+source=(
+  'dsh-web.service'
+  'dsh-web.environment'
+  'dsh-web.mjs'
+  'relax-cookie.mjs'
+)
+
+_base_url="https://github.com/yuuzao/aur_packages-repo/releases/download/v${pkgver}"
+source_x86_64=("${pkgname}-${pkgver}-x86_64.tar.gz::${_base_url}/deepseek-harness-v${pkgver}-linux-x64.tar.gz")
+
+sha256sums=('c16451e3beffa931e10d8dbda913b1360fba0c47746bc11c98eea1c05a1511a2'
+            '46575fcd92813783ab0beffbb1cedd95e941bca6d08e66fc75954957bbd9ab27'
+            '567ea06e64c636703c44500d7754171ab0aaad820256f27afdb7cfdbefff5b72'
+            'e9051dbf74fab7ab83e2cf87b5eb1a5e0ef6aa61b596740dad0688a451bdea70')
+sha256sums_x86_64=('8ba751160e7274c915978fc7ad5d1d5338d3c28dcc0de4b68eaa4cd4248bddf9')
+
+package() {
+  install -d "$pkgdir/usr/lib/deepseek-harness" "$pkgdir/usr/bin"
+  # 保留运行时目录的元数据与软链结构，但在 fakeroot 下不保留源目录属主。
+  cp -a --no-preserve=ownership node_modules "$pkgdir/usr/lib/deepseek-harness/"
+  ln -s ../lib/deepseek-harness/node_modules/@deepseek-ai/dsh/lib/bin.js "$pkgdir/usr/bin/dsh"
+
+  # 安装 Web UI 启动器与 systemd 系统服务单元
+  install -Dm644 dsh-web.mjs "$pkgdir/usr/lib/deepseek-harness/dsh-web.mjs"
+  install -Dm644 relax-cookie.mjs "$pkgdir/usr/lib/deepseek-harness/relax-cookie.mjs"
+  install -Dm644 dsh-web.service "$pkgdir/usr/lib/systemd/system/dsh-web.service"
+  install -Dm644 dsh-web.environment "$pkgdir/etc/deepseek-harness/environment"
+
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  find "$pkgdir/usr" -type d -exec chmod 755 {} +
+}
