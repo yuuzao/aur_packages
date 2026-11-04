@@ -1,7 +1,7 @@
 pkgbase = workbuddy
 	pkgdesc = Tencent Cloud AI agent desktop (official binary)
 	pkgver = 5.9.3.42398134_d4692421
-	pkgrel = 1
+	pkgrel = 2
 	url = https://www.workbuddy.cn/app
 	arch = x86_64
 	license = LicenseRef-proprietary
@@ -44,6 +44,8 @@ pkgbase = workbuddy
 	optdepends = python-pip: skills that call the system Python package manager
 	options = !strip
 	options = !debug
+	source = workbuddy-editor-sdk-supervisor
+	sha256sums = 2720d9e94e2f9f708589529f35b220c083c4792ff949330bbc1dab845939be82
 	source_x86_64 = workbuddy-5.9.3.42398134_d4692421-x86_64.deb::https://download.codebuddy.cn/workbuddy/saas/linux-x64-deb/WorkBuddy-linux-x64-deb-5.9.3.42398134-d4692421.deb
 	sha256sums_x86_64 = f99883f0e3c0c5d61420b545380b02e9f5876bb78ac220e9fcf0baba5b10cf67
 

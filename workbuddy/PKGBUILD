@@ -2,7 +2,7 @@
 # Official Linux deb. The copilot Linux update API lags the download history page.
 pkgname=workbuddy
 pkgver=5.9.3.42398134_d4692421
-pkgrel=1
+pkgrel=2
 pkgdesc='Tencent Cloud AI agent desktop (official binary)'
 arch=('x86_64')
 url='https://www.workbuddy.cn/app'
@@ -22,7 +22,12 @@ optdepends=(
   'python-pip: skills that call the system Python package manager'
 )
 options=('!strip' '!debug')
+# Upstream Linux deb omits workbuddy-editor-sdk-supervisor. Daemon startup
+# refuses to continue unless this path exists. The macOS build is Mach-O and
+# cannot be reused. This script only occupies the path; executing it fails.
+source=('workbuddy-editor-sdk-supervisor')
 source_x86_64=("$pkgname-$pkgver-x86_64.deb::https://download.codebuddy.cn/workbuddy/saas/linux-x64-deb/WorkBuddy-linux-x64-deb-${pkgver//_/-}.deb")
+sha256sums=('2720d9e94e2f9f708589529f35b220c083c4792ff949330bbc1dab845939be82')
 sha256sums_x86_64=('f99883f0e3c0c5d61420b545380b02e9f5876bb78ac220e9fcf0baba5b10cf67')
 
 prepare() {
@@ -46,4 +51,11 @@ EOF
     "$pkgdir/usr/share/applications/workbuddy.desktop"
   install -Dm644 opt/WorkBuddy/LICENSE.electron.txt \
     "$pkgdir/usr/share/licenses/$pkgname/LICENSE.electron.txt"
+  supervisor="$pkgdir/opt/WorkBuddy/resources/workbuddy-editor-sdk-supervisor"
+  if [[ -e $supervisor ]]; then
+    echo "upstream deb now ships workbuddy-editor-sdk-supervisor; remove the local placeholder" >&2
+    exit 1
+  fi
+  install -Dm755 "$srcdir/workbuddy-editor-sdk-supervisor" "$supervisor"
+  test -x "$supervisor"
 }

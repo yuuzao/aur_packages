@@ -1,0 +1,7 @@
+#!/bin/sh
+# The upstream Linux deb omits this file. Daemon startup only checks that the
+# path exists and does not execute it. The shipped macOS build is a Mach-O
+# supervisor, so it cannot be reused here. If a later feature executes this
+# path, fail visibly instead of pretending the supervisor ran.
+echo "editor-sdk-supervisor: upstream Linux package does not include this executable" >&2
+exit 1
