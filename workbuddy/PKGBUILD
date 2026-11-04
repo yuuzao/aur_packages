@@ -1,0 +1,49 @@
+# Maintainer: yuuzao
+# Official Linux deb. The copilot Linux update API lags the download history page.
+pkgname=workbuddy
+pkgver=5.9.3.42398134_d4692421
+pkgrel=1
+pkgdesc='Tencent Cloud AI agent desktop (official binary)'
+arch=('x86_64')
+url='https://www.workbuddy.cn/app'
+license=('LicenseRef-proprietary')
+depends=(
+  'alsa-lib' 'at-spi2-atk' 'at-spi2-core' 'atk' 'cairo' 'dbus' 'expat' 'gcc-libs'
+  'glib2' 'glibc' 'gtk3' 'hicolor-icon-theme' 'libcups' 'libnotify' 'libsecret'
+  'libx11' 'libxcb' 'libxcomposite' 'libxdamage' 'libxext' 'libxfixes' 'libxkbcommon'
+  'libxrandr' 'libxss' 'libxtst' 'mesa' 'nspr' 'nss' 'pango' 'systemd-libs'
+  'util-linux-libs' 'xdg-utils'
+)
+optdepends=(
+  'libappindicator-gtk3: tray icon integration'
+  'gnome-shell-extension-appindicator: tray icon integration on GNOME'
+  'imagemagick: image processing skills'
+  'nodejs: frontend skills'
+  'python-pip: skills that call the system Python package manager'
+)
+options=('!strip' '!debug')
+source_x86_64=("$pkgname-$pkgver-x86_64.deb::https://download.codebuddy.cn/workbuddy/saas/linux-x64-deb/WorkBuddy-linux-x64-deb-${pkgver//_/-}.deb")
+sha256sums_x86_64=('f99883f0e3c0c5d61420b545380b02e9f5876bb78ac220e9fcf0baba5b10cf67')
+
+prepare() {
+  bsdtar -xf data.tar.xz
+}
+
+package() {
+  test -x opt/WorkBuddy/workbuddy
+  test -f opt/WorkBuddy/chrome-sandbox
+  test -f usr/share/applications/workbuddy.desktop
+  test -f opt/WorkBuddy/LICENSE.electron.txt
+
+  cp -a opt usr "$pkgdir/"
+  # Electron aborts unless this helper is setuid root. The deb ships mode 0755.
+  chmod 4755 "$pkgdir/opt/WorkBuddy/chrome-sandbox"
+  install -Dm755 /dev/stdin "$pkgdir/usr/bin/workbuddy" <<'EOF'
+#!/usr/bin/bash
+exec /opt/WorkBuddy/workbuddy "$@"
+EOF
+  sed -i 's|^Exec=.*|Exec=/usr/bin/workbuddy %U|' \
+    "$pkgdir/usr/share/applications/workbuddy.desktop"
+  install -Dm644 opt/WorkBuddy/LICENSE.electron.txt \
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE.electron.txt"
+}

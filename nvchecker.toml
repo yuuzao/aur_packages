@@ -38,3 +38,10 @@ github = "yuuzao/aur_packages-repo"
 use_latest_release = true
 prefix = "v"
 
+# 下载历史页按新到旧列出构建号。Linux x64 deb 与同一次构建的 Windows 包共用该构建号。
+# copilot 的 Linux 更新接口会落后，不能用来判断最新版本。
+# 脚本把构建号和提交哈希之间的连字符换成下划线，以符合 pkgver。
+[workbuddy]
+source = "cmd"
+cmd = "python3 .github/scripts/workbuddy-version.py"
+
