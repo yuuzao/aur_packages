@@ -11,6 +11,7 @@ import logging
 import os
 import re
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
@@ -142,14 +143,32 @@ def release_exists(target_repo: str, release_tag: str, asset_name: str) -> bool:
     return asset_name in assets
 
 
+def require_readable_tarball(path: Path) -> None:
+    try:
+        st = path.stat()
+    except OSError as exc:
+        raise SystemExit(f"cannot stat tarball {path}: {exc}") from exc
+    if not stat.S_ISREG(st.st_mode):
+        raise SystemExit(
+            f"tarball is not a regular file: {path} mode={st.st_mode:o} uid={st.st_uid}"
+        )
+    if st.st_size == 0:
+        raise SystemExit(f"tarball is empty: {path} mode={st.st_mode:o} uid={st.st_uid}")
+    if not os.access(path, os.R_OK):
+        raise SystemExit(
+            f"tarball is not readable: {path} mode={st.st_mode:o} uid={st.st_uid}"
+        )
+
+
 def build_linux_tarball(upstream_tag: str, pkgver: str, out_dir: Path) -> Path:
     tarball_name = f"deepseek-harness-v{pkgver}-linux-x64.tar.gz"
+    # /out 是宿主机上模式 0700 的临时目录。容器里 chown 这个挂载点会改掉宿主机属主，
+    # runner 随后读不到产物，退出时也删不掉目录。产物先写在容器自己的 /tmp，再由 root 安装到 /out。
     script = f"""set -euo pipefail
 pacman-key --init
 pacman-key --populate archlinux
 pacman -Syu --noconfirm --needed archlinux-keyring base-devel git libarchive nodejs npm pnpm python sudo
 useradd -m builder
-chown -R builder:builder /out
 
 runuser -u builder -- bash -ce '
   set -euo pipefail
@@ -186,8 +205,10 @@ runuser -u builder -- bash -ce '
   node "$workdir/npm-root/node_modules/@deepseek-ai/dsh/lib/bin.js" --version
 
   cp "$workdir/deepseek-harness/LICENSE" "$workdir/npm-root/LICENSE"
-  tar -C "$workdir/npm-root" -czf "/out/{tarball_name}" node_modules LICENSE
+  tar -C "$workdir/npm-root" -czf /tmp/deepseek-harness-linux-x64.tar.gz node_modules LICENSE
 '
+install -m 644 /tmp/deepseek-harness-linux-x64.tar.gz "/out/{tarball_name}"
+test -s "/out/{tarball_name}"
 """
     run(
         [
@@ -205,8 +226,7 @@ runuser -u builder -- bash -ce '
         ]
     )
     tarball_path = out_dir / tarball_name
-    if not tarball_path.is_file():
-        raise SystemExit(f"expected tarball not produced: {tarball_path}")
+    require_readable_tarball(tarball_path)
     return tarball_path
 
 
