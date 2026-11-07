@@ -1,5 +1,5 @@
 # Public distribution target; only x86_64 packages are currently built.
-repository = "yuuzao/aur_packages-repo"
+repository = "yuuzao/aur_packages"
 release = "repo-x86_64"
 database = "personal"
 architecture = "x86_64"

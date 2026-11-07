@@ -34,7 +34,7 @@ prefix = "v"
 
 [deepseek-harness-bin]
 source = "github"
-github = "yuuzao/aur_packages-repo"
+github = "yuuzao/aur_packages"
 use_latest_release = true
 prefix = "v"
 

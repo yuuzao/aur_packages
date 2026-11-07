@@ -21,7 +21,7 @@ source=(
   'relax-cookie.mjs'
 )
 
-_base_url="https://github.com/yuuzao/aur_packages-repo/releases/download/v${pkgver}"
+_base_url="https://github.com/yuuzao/aur_packages/releases/download/v${pkgver}"
 source_x86_64=("${pkgname}-${pkgver}-x86_64.tar.gz::${_base_url}/deepseek-harness-v${pkgver}-linux-x64.tar.gz")
 
 sha256sums=('c16451e3beffa931e10d8dbda913b1360fba0c47746bc11c98eea1c05a1511a2'
