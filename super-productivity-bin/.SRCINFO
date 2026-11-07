@@ -1,6 +1,6 @@
 pkgbase = super-productivity-bin
 	pkgdesc = Task management with timeboxing and time tracking (official binaries)
-	pkgver = 19.3.1
+	pkgver = 20.0.0
 	pkgrel = 1
 	url = https://super-productivity.com
 	arch = x86_64
@@ -36,17 +36,17 @@ pkgbase = super-productivity-bin
 	depends = systemd-libs
 	depends = xdg-utils
 	optdepends = libappindicator-gtk3: tray icon integration
-	provides = super-productivity=19.3.1
-	provides = superproductivity=19.3.1
+	provides = super-productivity=20.0.0
+	provides = superproductivity=20.0.0
 	conflicts = super-productivity
 	conflicts = super-productivity-git
 	conflicts = superproductivity
 	conflicts = superproductivity-bin
 	options = !strip
 	options = !debug
-	source = LICENSE-19.3.1::https://raw.githubusercontent.com/super-productivity/super-productivity/v19.3.1/LICENSE
+	source = LICENSE-20.0.0::https://raw.githubusercontent.com/super-productivity/super-productivity/v20.0.0/LICENSE
 	sha256sums = 2e279de19632b5694d24b0ac06fd5b837ec487bf821302d9ce195379850a5fcb
-	source_x86_64 = super-productivity-bin-19.3.1-amd64.deb::https://github.com/super-productivity/super-productivity/releases/download/v19.3.1/superProductivity-amd64.deb
-	sha256sums_x86_64 = 3cc84bb864f7b13d4963d30750aa1067a55a825b2565c7bec329e51f9715598f
+	source_x86_64 = super-productivity-bin-20.0.0-amd64.deb::https://github.com/super-productivity/super-productivity/releases/download/v20.0.0/superProductivity-amd64.deb
+	sha256sums_x86_64 = 5da4efdfa8b93672a3f56f5812bea17aa933373080244b6a083b5909ef3604e6
 
 pkgname = super-productivity-bin
