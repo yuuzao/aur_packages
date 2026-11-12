@@ -194,7 +194,7 @@ runuser -u builder -- bash -ce '
   node /work/.github/scripts/deepseek-harness/aur-package.mjs "$workdir"
 
   cd "$workdir/npm-root"
-  npm install --include=optional --os=linux --cpu=x64 --no-audit --no-fund --package-lock=false
+  npm install --include=optional --os=linux --cpu=x64 --libc=glibc --no-audit --no-fund --package-lock=false
 
   rm -rf node_modules/node-pty/prebuilds/darwin-* \\
          node_modules/node-pty/prebuilds/win32-* \\
