@@ -2,7 +2,7 @@
 # 预编译的 DeepSeek Harness Linux x86_64 运行时，附带 dsh-web.service 系统服务管理。
 
 pkgname=deepseek-harness-bin
-pkgver=0.2.2rc.1
+pkgver=0.2.2rc.2
 pkgrel=1
 pkgdesc='DeepSeek Harness CLI and agent harness (prebuilt binary)'
 arch=('x86_64')
@@ -28,7 +28,7 @@ sha256sums=('c16451e3beffa931e10d8dbda913b1360fba0c47746bc11c98eea1c05a1511a2'
             '46575fcd92813783ab0beffbb1cedd95e941bca6d08e66fc75954957bbd9ab27'
             '567ea06e64c636703c44500d7754171ab0aaad820256f27afdb7cfdbefff5b72'
             'e9051dbf74fab7ab83e2cf87b5eb1a5e0ef6aa61b596740dad0688a451bdea70')
-sha256sums_x86_64=('daf318db495c39eb94a4563ddf238c2eaa675ba4c0cd50bbc8727518e05a15d6')
+sha256sums_x86_64=('6937ec5a960cefdc2bfe69de3a457bd78fc16ed0c062ba1319dea535a2f4ef30')
 
 package() {
   install -d "$pkgdir/usr/lib/deepseek-harness" "$pkgdir/usr/bin"
