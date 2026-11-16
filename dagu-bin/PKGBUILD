@@ -1,7 +1,7 @@
 # Maintainer: Xavier Francisco <echo moc.liamg@ocsicnarf.n.reivax | rev>
 
 pkgname=dagu-bin
-pkgver=2.26.0
+pkgver=2.27.0
 pkgrel=1
 pkgdesc="Lightweight workflow orchestration engine with web UI"
 arch=('x86_64' 'aarch64' 'armv7h' 'armv6h')
@@ -34,10 +34,10 @@ source_armv6h=("${pkgname}-${pkgver}-armv6h.tar.gz::${_base_url}/dagu_${pkgver}_
 sha256sums=('357b15548ece40020b9750b40a56be8999b3931bd3988c8c1f6bcc68060abdca'
             '9432ee987f778d4cc3bcbd079f14bd344f3a41c6b028b7030fc58bb93d359184'
             'f725048b000fbec3877001ab76de0ea778e857df77d53525efbd7daf20b414d4')
-sha256sums_x86_64=('2b1cab5dbab7c7dc6607d807e2cbf6597f26d5a5d09442e2c2abcfe1acbf9e68')
-sha256sums_aarch64=('76bf8a8105d815b1589c211df053e2f9db6c399780e4e0bbbfd07f69890045ad')
-sha256sums_armv7h=('1cbc19f114d734231a878740130ac548663c25d11fc702d2354c4d058b662226')
-sha256sums_armv6h=('bdbd48889fa65fb6b901031131ba7c197e5fd4fbee9003c503311e12f709f303')
+sha256sums_x86_64=('a9045768c9777d0b938585696e0491bc0ce46fbeb0419989b34fde63a0cc6f85')
+sha256sums_aarch64=('be66823266538330e440352658304c1261047a8e58b83a6b66c098a86629d2da')
+sha256sums_armv7h=('9a4dd9803173bf4f866d21b3dddb0b19949a087e247155ac5f0c3589c53a9203')
+sha256sums_armv6h=('2197bcea94cff85c86720abe10d40a9cb5ec0437eaf64928a826a5d64d398d8f')
 
 
 package() {
